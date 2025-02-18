@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.time_sheet_control.time.sheet.control.models.dto.authDTO.LoginDTO;
 import com.time_sheet_control.time.sheet.control.models.dto.authDTO.RegisterDTO;
 
 import com.time_sheet_control.time.sheet.control.service.AuthenticationService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("auth")
 public class AuthController {
     
     @Autowired
@@ -26,5 +27,12 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
 
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginDTO data) {
+        this.service.login(data);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("User login successfully");
     }
 }
