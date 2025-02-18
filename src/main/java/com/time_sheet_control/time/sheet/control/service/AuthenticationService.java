@@ -1,13 +1,17 @@
 package com.time_sheet_control.time.sheet.control.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 
 import com.time_sheet_control.time.sheet.control.exceptions.UserAlreadyExistsException;
+import com.time_sheet_control.time.sheet.control.models.dto.authDTO.LoginDTO;
 import com.time_sheet_control.time.sheet.control.models.dto.authDTO.RegisterDTO;
 import com.time_sheet_control.time.sheet.control.models.users.User;
 import com.time_sheet_control.time.sheet.control.repositories.UserRepository;
@@ -17,6 +21,9 @@ public class AuthenticationService implements UserDetailsService {
     
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -36,6 +43,14 @@ public class AuthenticationService implements UserDetailsService {
         this.repository.save(newUser);
 
         return newUser;
+    }
+
+    public Authentication login(LoginDTO data) {
+        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+        
+        Authentication auth = authenticationManager.authenticate(usernamePassword);
+
+        return auth;
     }
     
 }
