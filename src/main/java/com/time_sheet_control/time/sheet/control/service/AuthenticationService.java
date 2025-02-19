@@ -1,6 +1,7 @@
 package com.time_sheet_control.time.sheet.control.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,8 +23,11 @@ public class AuthenticationService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+
+    public AuthenticationService(@Lazy AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
