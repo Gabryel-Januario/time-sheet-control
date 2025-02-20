@@ -42,6 +42,8 @@ public class User implements UserDetails{
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    public User() {}
+
     public User(String name, String login, String password, String position, UserRole role) {
         this.name = name;
         this.login = login;
