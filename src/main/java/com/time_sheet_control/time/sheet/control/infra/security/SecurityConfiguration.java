@@ -1,5 +1,6 @@
 package com.time_sheet_control.time.sheet.control.infra.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,40 +11,37 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    @Autowired
+    private SecurityFilter securityFilter;
 
-        return httpSecurity
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+        .authorizeHttpRequests(auth -> auth
         .requestMatchers("/auth/login").permitAll()
-        .requestMatchers("/auth/register").hasRole("ADMIN")
-        .requestMatchers("/users/create").hasRole("ADMIN")
-        .requestMatchers("/users/all").hasRole("ADMIN")
-        .requestMatchers("/users/update/{id}").hasRole("ADMIN")
-        .requestMatchers("/users/delete/{id}").hasRole("ADMIN")
-        .requestMatchers("/users/user/{id}").authenticated()
-        .anyRequest().authenticated()
+        .requestMatchers("/user/{id}").authenticated()
+        .anyRequest().hasRole("ADMIN")
         )
+        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
-
     }
+    
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    
 }
