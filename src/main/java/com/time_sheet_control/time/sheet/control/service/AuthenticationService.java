@@ -50,11 +50,17 @@ public class AuthenticationService implements UserDetailsService {
     }
 
     public Authentication login(LoginDTO data) {
-        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.getLogin(), data.getPassword());
         
         Authentication auth = authenticationManager.authenticate(usernamePassword);
 
         return auth;
+    }
+
+    public User getUser(Authentication auth) {
+        User user = (User) auth.getPrincipal();
+
+        return user;
     }
     
 }
