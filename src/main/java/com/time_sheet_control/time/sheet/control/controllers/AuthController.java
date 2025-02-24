@@ -3,22 +3,29 @@ package com.time_sheet_control.time.sheet.control.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import com.time_sheet_control.time.sheet.control.infra.security.TokenService;
 import com.time_sheet_control.time.sheet.control.models.dto.authDTO.LoginDTO;
 import com.time_sheet_control.time.sheet.control.models.dto.authDTO.RegisterDTO;
-
+import com.time_sheet_control.time.sheet.control.models.users.User;
 import com.time_sheet_control.time.sheet.control.service.AuthenticationService;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("/auth")
 public class AuthController {
     
     @Autowired
     private AuthenticationService service;
+
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDTO data) {
@@ -31,8 +38,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO data) {
-        this.service.login(data);
+        Authentication auth = this.service.login(data);
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("User login successfully");
+        User user = this.service.getUser(auth);
+
+        String token = this.tokenService.generateToken(user);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("token: " + token);
     }
 }
