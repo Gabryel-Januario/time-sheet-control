@@ -1,5 +1,23 @@
 package com.time_sheet_control.time.sheet.control.models.dto.authDTO;
 
-public record LoginDTO(String login, String password) {
-    
+public class LoginDTO{
+
+    private String login;
+    private String password;
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
