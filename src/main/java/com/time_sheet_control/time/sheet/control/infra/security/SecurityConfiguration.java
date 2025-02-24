@@ -3,6 +3,7 @@ package com.time_sheet_control.time.sheet.control.infra.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,16 +23,24 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-        .csrf(csrf -> csrf.disable())
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/auth/login").permitAll()
-        .requestMatchers("/user/{id}").authenticated()
-        .anyRequest().hasRole("ADMIN")
-        )
-        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-        .build();
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                                        .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
+                                        .requestMatchers("/auth/register").hasRole("ADMIN")
+                                        .requestMatchers("/users/user/{id}").authenticated()
+                                        .requestMatchers("/users/**").hasRole("ADMIN")
+                                        .anyRequest().permitAll()
+                                        
+                )
+                .oauth2Login(auth -> auth.successHandler(new OAuth2LoginSuccessHandler()))
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+
+
+
+
+        return http.build();
     }
     
 
