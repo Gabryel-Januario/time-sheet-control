@@ -44,6 +44,11 @@ public class User implements UserDetails{
 
     public User() {}
 
+    public User(String name, String login) {
+        this.name = name;
+        this.login = login;
+    }
+
     public User(String name, String login, String password, String position, UserRole role) {
         this.name = name;
         this.login = login;
@@ -51,7 +56,6 @@ public class User implements UserDetails{
         this.position = position;
         this.role = role;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
