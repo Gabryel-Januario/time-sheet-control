@@ -45,13 +45,14 @@ public class UserController {
     public ResponseEntity<String> updatedUser(@PathVariable String id, @RequestBody UserRequestDTO data ){
 
         this.service.updateUser(id, data);
-        
-        return ResponseEntity.ok("User with id: " + id + "updated successfully");
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("User with id: " + id + " updated successfully");
 
     }
 
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<String> deleteUser() {
-        return ResponseEntity.ok("User deleted successfully");
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+        this.service.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("User with id: " + id + " deleted successfully");
     }
 }
