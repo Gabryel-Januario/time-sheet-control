@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.time_sheet_control.time.sheet.control.exceptions.ElementNotFound;
+import com.time_sheet_control.time.sheet.control.exceptions.UserNotFoundException;
 import com.time_sheet_control.time.sheet.control.models.dto.users.UserRequestDTO;
 import com.time_sheet_control.time.sheet.control.models.dto.users.UserResponseDTO;
 import com.time_sheet_control.time.sheet.control.models.dto.users.UsersDTO;
@@ -25,13 +25,13 @@ public class UserService {
     public List<UsersDTO> getAll() {
         List<User> users = this.repository.findAll();
 
-        if(users.isEmpty()) throw new ElementNotFound("Users not found");
+        if(users.isEmpty()) throw new UserNotFoundException("Users not found");
 
         return users.stream().map(user -> new UsersDTO(user.getName(), user.getLogin(), user.getPosition(), user.getRole())).toList();
     }
 
     public UserResponseDTO getById(String id) {
-        User user = this.repository.findById(id).orElseThrow(() -> new ElementNotFound("User not found"));
+        User user = this.repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         UserResponseDTO response = new UserResponseDTO(user.getName(), user.getLogin(), user.getPosition(), user.getRole());
 
@@ -41,7 +41,7 @@ public class UserService {
 
     public void updateUser(String id, UserRequestDTO data) {
 
-        User user = this.repository.findById(id).orElseThrow(() -> new ElementNotFound("User not found"));
+        User user = this.repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if(data.name() != null && !data.name().isEmpty() ) {
             user.setName(data.name());
@@ -64,4 +64,10 @@ public class UserService {
  
     }
 
+    public void deleteUser(String id) {
+        User user = this.repository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id: " + id + " not found"));
+
+        this.repository.delete(user);
+
+    }
 }
