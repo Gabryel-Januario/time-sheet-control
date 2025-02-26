@@ -1,4 +1,4 @@
-package com.time_sheet_control.time.sheet.control.models.dto.users;
+package com.time_sheet_control.time.sheet.control.models.dto.usersDTO;
 
 import com.time_sheet_control.time.sheet.control.models.users.UserRole;
 

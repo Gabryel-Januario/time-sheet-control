@@ -49,5 +49,4 @@ public class TokenService {
             throw new RuntimeException("Error while verification token", exception);
         }
     }
-    
 }

@@ -48,6 +48,10 @@ public class User implements UserDetails{
     @OneToMany(mappedBy = "user")
     private List<TimeRecords> timeRecords;
 
+    public String getId() {
+        return id;
+    }
+
     public User() {}
 
     public User(String name, String login) {

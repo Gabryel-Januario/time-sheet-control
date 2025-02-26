@@ -7,9 +7,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.time_sheet_control.time.sheet.control.exceptions.UserNotFoundException;
-import com.time_sheet_control.time.sheet.control.models.dto.users.UserRequestDTO;
-import com.time_sheet_control.time.sheet.control.models.dto.users.UserResponseDTO;
-import com.time_sheet_control.time.sheet.control.models.dto.users.UsersDTO;
+import com.time_sheet_control.time.sheet.control.models.dto.usersDTO.UserRequestDTO;
+import com.time_sheet_control.time.sheet.control.models.dto.usersDTO.UserResponseDTO;
+import com.time_sheet_control.time.sheet.control.models.dto.usersDTO.UsersDTO;
 import com.time_sheet_control.time.sheet.control.models.users.User;
 import com.time_sheet_control.time.sheet.control.repositories.UserRepository;
 

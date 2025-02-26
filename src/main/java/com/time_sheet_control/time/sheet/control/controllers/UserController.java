@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.time_sheet_control.time.sheet.control.models.dto.users.UserRequestDTO;
-import com.time_sheet_control.time.sheet.control.models.dto.users.UserResponseDTO;
-import com.time_sheet_control.time.sheet.control.models.dto.users.UsersDTO;
+import com.time_sheet_control.time.sheet.control.models.dto.usersDTO.UserRequestDTO;
+import com.time_sheet_control.time.sheet.control.models.dto.usersDTO.UserResponseDTO;
+import com.time_sheet_control.time.sheet.control.models.dto.usersDTO.UsersDTO;
 import com.time_sheet_control.time.sheet.control.service.UserService;
 
 @RestController

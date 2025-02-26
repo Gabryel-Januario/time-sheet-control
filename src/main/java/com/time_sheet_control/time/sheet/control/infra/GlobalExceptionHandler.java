@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.time_sheet_control.time.sheet.control.exceptions.ElementNotFound;
+import com.time_sheet_control.time.sheet.control.exceptions.UserNotFoundException;
 import com.time_sheet_control.time.sheet.control.exceptions.UserAlreadyExistsException;
 
 @RestControllerAdvice
@@ -17,8 +17,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
     }
 
-    @ExceptionHandler(ElementNotFound.class)
-    public ResponseEntity<String> HandlerElementNotFound(ElementNotFound exception) {
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> HandlerElementNotFound(UserNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 }
