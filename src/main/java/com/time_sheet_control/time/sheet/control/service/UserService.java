@@ -3,7 +3,7 @@ package com.time_sheet_control.time.sheet.control.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.time_sheet_control.time.sheet.control.exceptions.UserNotFoundException;
@@ -20,7 +20,7 @@ public class UserService {
     private UserRepository repository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     public List<UsersDTO> getAll() {
         List<User> users = this.repository.findAll();
