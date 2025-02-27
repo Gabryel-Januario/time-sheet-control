@@ -1,4 +1,4 @@
-package com.time_sheet_control.time.sheet.control;
+package com.time_sheet_control.time.sheet.control.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
