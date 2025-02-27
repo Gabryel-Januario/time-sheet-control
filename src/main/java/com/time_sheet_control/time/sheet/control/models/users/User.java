@@ -68,6 +68,11 @@ public class User implements UserDetails{
     }
 
     @Override
+    public String toString() {
+        return "User{id=" + id + ", name=" + name + ", login=" + login + ", password=" + password + ", position=" + position + ", role=" + role + "}";
+    }
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         
         if(this.role == UserRole.ADMIN) {

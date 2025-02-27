@@ -26,16 +26,28 @@ public class TimeRecords {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
-
-    @Column(name = "check_in")
+     
+    @Column(name = "check_in", nullable = true)
     private Timestamp checkIn;
 
-    @Column(name = "check_out")
+    @Column(name = "check_out", nullable = true)
     private Timestamp checkOut;
 
-    @Column(name = "hours_worked")
-    private BigDecimal hours_worked;
+    @Column(name = "hours_worked", nullable = true)
+    private BigDecimal hoursWorked;
 
+    public TimeRecords(User user, Timestamp checkIn) {
+        this.user = user;
+        this.checkIn = checkIn;
+    }
+
+    public TimeRecords(){}
+
+
+    @Override
+    public String toString() {
+        return "TimeRecords{id=" + id + ", checkIn=" + checkIn + ", checkOut=" + checkOut + ", hoursWorked=" + hoursWorked + ", user=" + user + "}";
+    }
 }
