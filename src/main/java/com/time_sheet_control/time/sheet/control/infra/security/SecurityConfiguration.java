@@ -31,7 +31,10 @@ public class SecurityConfiguration {
                                         .requestMatchers("/auth/register").hasRole("ADMIN")
                                         .requestMatchers("/users/user/{id}").authenticated()
                                         .requestMatchers("/users/**").hasRole("ADMIN")
-                                        .anyRequest().permitAll()
+                                        .requestMatchers(HttpMethod.GET, 
+                                        "/record/all", "/record/employee/{id}", "/record/employee/{id}/pdf")
+                                        .hasRole("ADMIN")
+                                        .anyRequest().authenticated()
                                         
                 ) 
                 .oauth2Login(auth -> auth.successHandler(new OAuth2LoginSuccessHandler()))
