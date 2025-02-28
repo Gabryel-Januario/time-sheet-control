@@ -92,6 +92,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>										
 		</dependency>
+		<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>itext7-core</artifactId>
+    <version>9.1.0</version>
+    <type>pom</type>
+</dependency>
 	</dependencies>
 
 	<build>

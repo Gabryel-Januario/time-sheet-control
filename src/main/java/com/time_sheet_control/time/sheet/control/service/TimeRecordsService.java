@@ -1,5 +1,6 @@
 package com.time_sheet_control.time.sheet.control.service;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.sql.Timestamp;
@@ -10,6 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
 import com.time_sheet_control.time.sheet.control.exceptions.TimeRecordsNotFoundException;
 import com.time_sheet_control.time.sheet.control.models.dto.timeRecordDTO.TimeRecordsResponseDTO;
 import com.time_sheet_control.time.sheet.control.models.timerecords.TimeRecords;
@@ -128,5 +137,41 @@ public class TimeRecordsService {
             formatTimestamp.format(timeRecord.getCheckIn()), 
             formatTimestamp.format(timeRecord.getCheckOut()), 
             timeRecord.getHoursWorked())).toList();
+    }
+ 
+    public byte[] generateReport(List<TimeRecordsResponseDTO> timeRecords) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter writer = new PdfWriter(out);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            PdfFont boldFont = PdfFontFactory.createFont(com.itextpdf.io.font.constants.StandardFonts.HELVETICA_BOLD);
+            document.add(new Paragraph("Time Sheet").setFontSize(16).setFont(boldFont));
+
+            float[] columnWidths = {200F, 150F, 150F, 100F};
+            Table table = new Table(columnWidths);
+
+            table.addCell("ID");
+            table.addCell("Check-In");
+            table.addCell("Check-Out");
+            table.addCell("Hours Worked");
+
+            for(TimeRecordsResponseDTO record : timeRecords){
+                table.addCell(record.getId());
+                table.addCell(record.getCheckIn().toString());
+                table.addCell(record.getCheckOut().toString());
+                table.addCell(String.valueOf(record.getHoursWorked()));
+            }
+
+            document.add(table);
+            document.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return out.toByteArray();
     }
 }
