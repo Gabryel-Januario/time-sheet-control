@@ -30,7 +30,7 @@ public class TimeRecordsService {
     @Autowired
     private FormatTimestamp formatTimestamp;
 
-    public Timestamp checkIn(Principal principal) {
+    public TimeRecords checkIn(Principal principal) {
         if (principal == null) {
             throw new IllegalArgumentException("User not authenticate");
         }
@@ -51,35 +51,33 @@ public class TimeRecordsService {
         TimeRecords newTimeRecords = new TimeRecords(userReference, checkIn);
         this.timeRepository.save(newTimeRecords);
 
-        return checkIn;
+        return newTimeRecords;
     }
 
     public TimeRecords checkOut(String timeRecordId, Principal principal) {
-        if(principal == null) {
-            throw new IllegalArgumentException("User not authenticated");
-        }
+        if(principal == null) throw new IllegalArgumentException("User not authenticated");
 
         Authentication authentication = (Authentication) principal;
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = (User)this.userRepository.findByLogin(userDetails.getUsername());
 
-        TimeRecords timeRecords = this.timeRepository.findById(timeRecordId).
+        TimeRecords timeRecord = this.timeRepository.findById(timeRecordId).
                             orElseThrow(() -> new TimeRecordsNotFoundException("TimeRecords not found."));
         
-        if(!timeRecords.getUser().getId().equals(user.getId())) {
+        if(!timeRecord.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("User does not have permission to change this time record");
         }             
 
         Timestamp checkOut = Timestamp.from(Instant.now());
-        timeRecords.setCheckOut(checkOut);
+        timeRecord.setCheckOut(checkOut);
 
-        long diffMillis = timeRecords.getCheckOut().getTime() - timeRecords.getCheckIn().getTime();
+        long diffMillis = timeRecord.getCheckOut().getTime() - timeRecord.getCheckIn().getTime();
         double convertedHours = diffMillis / (1000.0 * 60 * 60);
         BigDecimal hoursWorked = BigDecimal.valueOf(convertedHours);
-        timeRecords.setHoursWorked(hoursWorked);
+        timeRecord.setHoursWorked(hoursWorked);
 
-        timeRepository.save(timeRecords);
-        return timeRecords;
+        timeRepository.save(timeRecord);
+        return timeRecord;
 
     }
 
@@ -99,7 +97,7 @@ public class TimeRecordsService {
                      timeRecord.getHoursWorked())).toList();
     }
 
-    public List<TimeRecords> getMy(Principal principal) {
+    public List<TimeRecordsResponseDTO> getMy(Principal principal) {
         if(principal == null) {
             throw new IllegalArgumentException("User not authenticated");
         }
@@ -110,6 +108,25 @@ public class TimeRecordsService {
 
         List<TimeRecords> timeRecords = user.getTimeRecords();
 
-        return timeRecords;
+        return timeRecords
+        .stream().map(timeRecord -> new TimeRecordsResponseDTO(
+            timeRecord.getId(), 
+            timeRecord.getUser().getId(), 
+            formatTimestamp.format(timeRecord.getCheckIn()), 
+            formatTimestamp.format(timeRecord.getCheckOut()), 
+            timeRecord.getHoursWorked())).toList();
+    }
+
+    public List<TimeRecordsResponseDTO> getById(String id){
+        User user = this.userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        List<TimeRecords> timeRecords = user.getTimeRecords();
+
+        return timeRecords
+        .stream().map(timeRecord -> new TimeRecordsResponseDTO(
+            timeRecord.getId(), 
+            timeRecord.getUser().getId(), 
+            formatTimestamp.format(timeRecord.getCheckIn()), 
+            formatTimestamp.format(timeRecord.getCheckOut()), 
+            timeRecord.getHoursWorked())).toList();
     }
 }

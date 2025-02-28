@@ -28,17 +28,17 @@ public class TimeRecordsController {
     private TimeRecordsService service;
     
     @PostMapping("/check_in")
-    public ResponseEntity<String> checkIn(Principal principal) {
-       Timestamp checkIn= this.service.checkIn(principal);
+    public ResponseEntity<TimeRecords> checkIn(Principal principal) {
+       TimeRecords timeRecords= this.service.checkIn(principal);
 
-       return ResponseEntity.ok().body("Check In successfully performed. Time: " + checkIn);
+       return ResponseEntity.ok().body(timeRecords);
     }
 
     @PostMapping("/check_out/{id}")
-    public ResponseEntity<String> checkOut(@PathVariable String id, Principal principal) {
-        TimeRecords timeRecords = this.service.checkOut(id, principal);
+    public ResponseEntity<TimeRecords> checkOut(@PathVariable String id, Principal principal) {
+        TimeRecords timeRecord = this.service.checkOut(id, principal);
 
-        return ResponseEntity.ok().body("Check Out successfully perfomed. TimeRecords: " + timeRecords);
+        return ResponseEntity.ok().body(timeRecord);
     }
 
     @GetMapping("/all")
@@ -49,9 +49,16 @@ public class TimeRecordsController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<String> getMy(Principal principal) {
-        List<TimeRecords> timeRecords = this.service.getMy(principal);
+    public ResponseEntity<List<TimeRecordsResponseDTO>> getMy(Principal principal) {
+        List<TimeRecordsResponseDTO> timeRecords = this.service.getMy(principal);
 
-        return ResponseEntity.ok().body("Your TimeRecords: " + timeRecords);
+        return ResponseEntity.ok().body(timeRecords);
+    }
+
+    @GetMapping("/employee/{id}")
+    public ResponseEntity<List<TimeRecordsResponseDTO>> getById(@PathVariable String id) {
+        List<TimeRecordsResponseDTO> timeRecords = this.service.getById(id);
+
+        return ResponseEntity.status(HttpStatus.FOUND).body(timeRecords);
     }
 }
