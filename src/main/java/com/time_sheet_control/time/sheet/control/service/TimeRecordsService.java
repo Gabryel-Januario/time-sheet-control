@@ -39,7 +39,7 @@ public class TimeRecordsService {
     @Autowired
     private FormatTimestamp formatTimestamp;
 
-    public TimeRecords checkIn(Principal principal) {
+    public TimeRecordsResponseDTO checkIn(Principal principal) {
         if (principal == null) {
             throw new IllegalArgumentException("User not authenticate");
         }
@@ -56,14 +56,22 @@ public class TimeRecordsService {
         userReference.setId(userId);
 
         Timestamp checkIn =  Timestamp.from(Instant.now());
+        Timestamp checkOut = Timestamp.valueOf("9999-12-31 23:59:59");
 
-        TimeRecords newTimeRecords = new TimeRecords(userReference, checkIn);
+        TimeRecords newTimeRecords = new TimeRecords(userReference, checkIn, checkOut);
         this.timeRepository.save(newTimeRecords);
 
-        return newTimeRecords;
+        TimeRecordsResponseDTO response = new TimeRecordsResponseDTO(
+                                                newTimeRecords.getId(), 
+                                                newTimeRecords.getUser().getId(), 
+                                                formatTimestamp.format(newTimeRecords.getCheckIn()), 
+                                                formatTimestamp.format(newTimeRecords.getCheckOut()), 
+                                                newTimeRecords.getHoursWorked()
+                                                );
+        return response;
     }
 
-    public TimeRecords checkOut(String timeRecordId, Principal principal) {
+    public TimeRecordsResponseDTO checkOut(String timeRecordId, Principal principal) {
         if(principal == null) throw new IllegalArgumentException("User not authenticated");
 
         Authentication authentication = (Authentication) principal;
@@ -86,7 +94,16 @@ public class TimeRecordsService {
         timeRecord.setHoursWorked(hoursWorked);
 
         timeRepository.save(timeRecord);
-        return timeRecord;
+
+        TimeRecordsResponseDTO response = new TimeRecordsResponseDTO(
+            timeRecord.getId(), 
+            timeRecord.getUser().getId(), 
+            formatTimestamp.format(timeRecord.getCheckIn()), 
+            formatTimestamp.format(timeRecord.getCheckOut()), 
+            timeRecord.getHoursWorked()
+            );
+
+        return response;
 
     }
 

@@ -33,13 +33,31 @@ public class SecurityFilter extends OncePerRequestFilter{
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException{
+        String requestURI = request.getRequestURI();
+    
+        if (requestURI.equals("/auth/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
+
         var token = this.recoverToken(request);
         if(token != null) {
-            var login = this.TokenService.validateToken(token);
-            UserDetails user = this.userRepository.findByLogin(login);
+            try {
+                var login = this.TokenService.validateToken(token);
+                UserDetails user = this.userRepository.findByLogin(login);
 
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities() );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities() );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (RuntimeException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); 
+                response.getWriter().write("Unauthorized: Invalid or expired token.");
+                return;  
+            }
+        }else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);  
+            response.getWriter().write("Unauthorized: Token is missing.");
+            return;  
         }
         filterChain.doFilter(request, response);
     }         

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.time_sheet_control.time.sheet.control.exceptions.TimeRecordsNotFoundException;
 import com.time_sheet_control.time.sheet.control.models.dto.timeRecordDTO.TimeRecordsResponseDTO;
-import com.time_sheet_control.time.sheet.control.models.timerecords.TimeRecords;
+
 
 import com.time_sheet_control.time.sheet.control.service.TimeRecordsService;
 
@@ -25,15 +25,15 @@ public class TimeRecordsController {
     private TimeRecordsService service;
 
     @PostMapping("/check_in")
-    public ResponseEntity<TimeRecords> checkIn(Principal principal) {
-       TimeRecords timeRecords= this.service.checkIn(principal);
+    public ResponseEntity<TimeRecordsResponseDTO> checkIn(Principal principal) {
+       TimeRecordsResponseDTO timeRecords= this.service.checkIn(principal);
 
        return ResponseEntity.ok().body(timeRecords);
     }
 
     @PostMapping("/check_out/{id}")
-    public ResponseEntity<TimeRecords> checkOut(@PathVariable String id, Principal principal) {
-        TimeRecords timeRecord = this.service.checkOut(id, principal);
+    public ResponseEntity<TimeRecordsResponseDTO> checkOut(@PathVariable String id, Principal principal) {
+        TimeRecordsResponseDTO timeRecord = this.service.checkOut(id, principal);
 
         return ResponseEntity.ok().body(timeRecord);
     }

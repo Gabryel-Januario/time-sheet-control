@@ -4,6 +4,7 @@ package com.time_sheet_control.time.sheet.control.models.timerecords;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+
 import com.time_sheet_control.time.sheet.control.models.users.User;
 
 import jakarta.persistence.Column;
@@ -38,9 +39,10 @@ public class TimeRecords {
     @Column(name = "hours_worked", nullable = true)
     private BigDecimal hoursWorked;
 
-    public TimeRecords(User user, Timestamp checkIn) {
+    public TimeRecords(User user, Timestamp checkIn, Timestamp checkOut) {
         this.user = user;
         this.checkIn = checkIn;
+        this.checkOut = checkOut;
     }
 
     public TimeRecords(){}

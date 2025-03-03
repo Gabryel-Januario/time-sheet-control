@@ -18,11 +18,12 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret; 
 
-    Date expiresAt = Date.from(Instant.now().plusSeconds(3600));
+    
 
     public String generateToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
+            Date expiresAt = Date.from(Instant.now().plusSeconds(3600));
 
             String token = JWT.create()
                             .withIssuer("spring-security")

@@ -28,17 +28,22 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                                         .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
-                                        .requestMatchers("/auth/register").hasRole("ADMIN")
-                                        .requestMatchers("/users/user/{id}").authenticated()
-                                        .requestMatchers("/users/**").hasRole("ADMIN")
-                                        .requestMatchers(HttpMethod.GET, 
-                                        "/record/all", "/record/employee/{id}", "/record/employee/{id}/pdf")
-                                        .hasRole("ADMIN")
+                                        
+                                        .requestMatchers(HttpMethod.GET,"/users/user/{id}").authenticated()
+                                        .requestMatchers(HttpMethod.GET, "/record/my").authenticated()
+
+                                        .requestMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.GET,"/users/all").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.PUT,"/users/user/{id}").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.DELETE,"/users/user/{id}").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/record/all").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/record/employee/{id}").hasRole("ADMIN")
+                                        .requestMatchers(HttpMethod.GET, "/record/employee/{id}/pdf").hasRole("ADMIN")
                                         .anyRequest().authenticated()
                                         
-                ) 
-                .oauth2Login(auth -> auth.successHandler(new OAuth2LoginSuccessHandler()))
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+                )
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(auth -> auth.successHandler(new OAuth2LoginSuccessHandler()));
 
         return http.build();
     }
