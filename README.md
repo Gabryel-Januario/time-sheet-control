@@ -65,12 +65,12 @@ mvn spring-boot:run
 | <kbd>POST /auth/login</kbd>     | Login do usuário retornando token 
 | <kbd>POST /auth/register</kbd>     | registro de usuário 
 | <kbd>POST /oauth2/authorization/google</kbd>     | autentificação via Oauth2 
-
+| 
 | <kbd>GET /users/all</kbd>     | Visualiza todos usuários 
 | <kbd>GET /users/user/{id}</kbd>     | Visualiza usuário pelo id 
 | <kbd>PUT /users/user/{id}</kbd>     | Atualiza os dados do usuário 
 | <kbd>DELETE /users/user/{id}</kbd>     | Deleta o usuário 
-
+| 
 | <kbd>POST /record/check_in</kbd>     | Realiza check in 
 | <kbd>POST /record/check_out/{id}</kbd>     | Realiza check out 
 | <kbd>GET /record/all</kbd>     | Visualiza todos os pontos 
