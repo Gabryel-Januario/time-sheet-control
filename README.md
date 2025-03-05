@@ -85,7 +85,7 @@ mvn spring-boot:run
       <a href="#">
         <img src="https://avatars.githubusercontent.com/u/161720296?s=96&v=4" width="100px;" alt="Gabryel Januario Profile Picture"/><br>
         <sub>
-          <b>Fernanda Kipper</b>
+          <b>Gabryel Januario</b>
         </sub>
       </a>
     </td>
